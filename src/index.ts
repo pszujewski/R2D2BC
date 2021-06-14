@@ -35,6 +35,7 @@ import TextHighlighter from "./modules/highlight/TextHighlighter";
 import { Locator } from "./model/Locator";
 import TimelineModule from "./modules/positions/TimelineModule";
 import { getUserAgentRegExp } from "browserslist-useragent-regexp";
+export { default as Reader } from "./Reader";
 
 var R2Settings: UserSettings;
 var R2TTSSettings: TTSSettings;
