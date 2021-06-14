@@ -19,9 +19,9 @@
 
 {
   "include": ["src", "examples"],
+  "exclude": ["viewer"],
   "compileOnSave": true,
   "compilerOptions": {
-    "rootDir": "./src",
     "forceConsistentCasingInFileNames": true,
     "module": "es6",
     "noEmitOnError": true,
