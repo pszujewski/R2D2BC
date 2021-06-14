@@ -44,8 +44,8 @@ export interface BookmarkModuleConfig {
   publication: Publication;
   delegate: IFrameNavigator;
   initialAnnotations?: any;
-  properties: BookmarkModuleProperties;
-  api: BookmarkModuleAPI;
+  properties?: BookmarkModuleProperties;
+  api?: BookmarkModuleAPI;
 }
 
 export default class BookmarkModule implements ReaderModule {
@@ -271,12 +271,8 @@ export default class BookmarkModule implements ReaderModule {
     }
   }
 
-  async getBookmarks(): Promise<any> {
-    let bookmarks: Array<any> = [];
-    if (this.annotator) {
-      bookmarks = (await this.annotator.getBookmarks()) as Array<any>;
-    }
-    return bookmarks;
+  async getBookmarks() {
+    return this.annotator?.getBookmarks();
   }
   public async showBookmarks(): Promise<void> {
     let bookmarks: Array<any> = [];

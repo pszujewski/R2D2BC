@@ -44,7 +44,7 @@ export interface AnnotationModuleAPI {
   selectedAnnotation: Highlight;
 }
 export interface AnnotationModuleProperties {
-  initialAnnotationColor: string;
+  initialAnnotationColor?: string;
 }
 
 export interface AnnotationModuleConfig extends AnnotationModuleProperties {
@@ -54,7 +54,7 @@ export interface AnnotationModuleConfig extends AnnotationModuleProperties {
   publication: Publication;
   delegate: IFrameNavigator;
   initialAnnotations?: any;
-  api: AnnotationModuleAPI;
+  api?: AnnotationModuleAPI;
   highlighter: TextHighlighter;
 }
 
