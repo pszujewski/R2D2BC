@@ -50,354 +50,357 @@ var TimelineModuleInstance: TimelineModule;
 export const IS_DEV =
   process.env.NODE_ENV === "development" || process.env.NODE_ENV === "dev";
 
-export async function unload() {
-  if (IS_DEV) {
-    console.log("unload reader");
+export default class D2Reader {
+  async unload() {
+    if (IS_DEV) {
+      console.log("unload reader");
+    }
+    document.body.onscroll = () => {};
+    R2Navigator.stop();
+    R2Settings.stop();
+    if (R2Navigator.rights?.enableTTS) {
+      R2TTSSettings.stop();
+      TTSModuleInstance.stop();
+    }
+    if (R2Navigator.rights?.enableBookmarks) {
+      BookmarkModuleInstance.stop();
+    }
+    if (R2Navigator.rights?.enableAnnotations) {
+      AnnotationModuleInstance.stop();
+    }
+    if (R2Navigator.rights?.enableSearch) {
+      SearchModuleInstance.stop();
+    }
+    if (R2Navigator.rights?.enableContentProtection) {
+      ContentProtectionModuleInstance.stop();
+    }
+    if (R2Navigator.rights?.enableTimeline) {
+      TimelineModuleInstance.stop();
+    }
   }
-  document.body.onscroll = () => {};
-  R2Navigator.stop();
-  R2Settings.stop();
-  if (R2Navigator.rights?.enableTTS) {
-    R2TTSSettings.stop();
-    TTSModuleInstance.stop();
+  startReadAloud() {
+    if (IS_DEV) {
+      console.log("startReadAloud");
+    }
+    return R2Navigator.startReadAloud();
   }
-  if (R2Navigator.rights?.enableBookmarks) {
-    BookmarkModuleInstance.stop();
+  stopReadAloud() {
+    if (IS_DEV) {
+      console.log("stopReadAloud");
+    }
+    return R2Navigator.stopReadAloud();
   }
-  if (R2Navigator.rights?.enableAnnotations) {
-    AnnotationModuleInstance.stop();
+  pauseReadAloud() {
+    if (IS_DEV) {
+      console.log("pauseReadAloud");
+    }
+    return R2Navigator.pauseReadAloud();
   }
-  if (R2Navigator.rights?.enableSearch) {
-    SearchModuleInstance.stop();
+  resumeReadAloud() {
+    if (IS_DEV) {
+      console.log("resumeReadAloud");
+    }
+    return R2Navigator.resumeReadAloud();
   }
-  if (R2Navigator.rights?.enableContentProtection) {
-    ContentProtectionModuleInstance.stop();
-  }
-  if (R2Navigator.rights?.enableTimeline) {
-    TimelineModuleInstance.stop();
-  }
-}
-export function startReadAloud() {
-  if (IS_DEV) {
-    console.log("startReadAloud");
-  }
-  return R2Navigator.startReadAloud();
-}
-export function stopReadAloud() {
-  if (IS_DEV) {
-    console.log("stopReadAloud");
-  }
-  return R2Navigator.stopReadAloud();
-}
-export function pauseReadAloud() {
-  if (IS_DEV) {
-    console.log("pauseReadAloud");
-  }
-  return R2Navigator.pauseReadAloud();
-}
-export function resumeReadAloud() {
-  if (IS_DEV) {
-    console.log("resumeReadAloud");
-  }
-  return R2Navigator.resumeReadAloud();
-}
 
-export async function saveBookmark() {
-  if (R2Navigator.rights?.enableBookmarks) {
-    if (IS_DEV) {
-      console.log("saveBookmark");
+  async saveBookmark() {
+    if (R2Navigator.rights?.enableBookmarks) {
+      if (IS_DEV) {
+        console.log("saveBookmark");
+      }
+      return await BookmarkModuleInstance.saveBookmark();
     }
-    return await BookmarkModuleInstance.saveBookmark();
   }
-}
-export async function deleteBookmark(bookmark) {
-  if (R2Navigator.rights?.enableBookmarks) {
-    if (IS_DEV) {
-      console.log("deleteBookmark");
+  async deleteBookmark(bookmark) {
+    if (R2Navigator.rights?.enableBookmarks) {
+      if (IS_DEV) {
+        console.log("deleteBookmark");
+      }
+      return await BookmarkModuleInstance.deleteBookmark(bookmark);
     }
-    return await BookmarkModuleInstance.deleteBookmark(bookmark);
   }
-}
-export async function deleteAnnotation(highlight) {
-  if (R2Navigator.rights?.enableAnnotations) {
-    if (IS_DEV) {
-      console.log("deleteAnnotation");
+  async deleteAnnotation(highlight) {
+    if (R2Navigator.rights?.enableAnnotations) {
+      if (IS_DEV) {
+        console.log("deleteAnnotation");
+      }
+      return await AnnotationModuleInstance.deleteAnnotation(highlight);
     }
-    return await AnnotationModuleInstance.deleteAnnotation(highlight);
   }
-}
-export async function addAnnotation(highlight) {
-  if (R2Navigator.rights?.enableAnnotations) {
-    if (IS_DEV) {
-      console.log("addAnnotation");
+  async addAnnotation(highlight) {
+    if (R2Navigator.rights?.enableAnnotations) {
+      if (IS_DEV) {
+        console.log("addAnnotation");
+      }
+      return await AnnotationModuleInstance.addAnnotation(highlight);
     }
-    return await AnnotationModuleInstance.addAnnotation(highlight);
   }
-}
-export async function tableOfContents() {
-  if (IS_DEV) {
-    console.log("tableOfContents");
-  }
-  return await R2Navigator.tableOfContents();
-}
-export async function readingOrder() {
-  if (IS_DEV) {
-    console.log("readingOrder");
-  }
-  return await R2Navigator.readingOrder();
-}
-export async function bookmarks() {
-  if (R2Navigator.rights?.enableBookmarks) {
+  async tableOfContents() {
     if (IS_DEV) {
-      console.log("bookmarks");
+      console.log("tableOfContents");
     }
-    return await BookmarkModuleInstance.getBookmarks();
-  } else {
-    return [];
+    return await R2Navigator.tableOfContents();
   }
-}
-export async function annotations() {
-  if (R2Navigator.rights?.enableAnnotations) {
+  async readingOrder() {
     if (IS_DEV) {
-      console.log("annotations");
+      console.log("readingOrder");
     }
-    return await AnnotationModuleInstance.getAnnotations();
-  } else {
-    return [];
+    return await R2Navigator.readingOrder();
   }
-}
+  async bookmarks() {
+    if (R2Navigator.rights?.enableBookmarks) {
+      if (IS_DEV) {
+        console.log("bookmarks");
+      }
+      return await BookmarkModuleInstance.getBookmarks();
+    } else {
+      return [];
+    }
+  }
+  async annotations() {
+    if (R2Navigator.rights?.enableAnnotations) {
+      if (IS_DEV) {
+        console.log("annotations");
+      }
+      return await AnnotationModuleInstance.getAnnotations();
+    } else {
+      return [];
+    }
+  }
 
-export async function search(term, current) {
-  if (R2Navigator.rights?.enableSearch) {
-    if (IS_DEV) {
-      console.log("search");
+  async search(term, current) {
+    if (R2Navigator.rights?.enableSearch) {
+      if (IS_DEV) {
+        console.log("search");
+      }
+      return await SearchModuleInstance.search(term, current);
+    } else {
+      return [];
     }
-    return await SearchModuleInstance.search(term, current);
-  } else {
-    return [];
   }
-}
-export async function goToSearchIndex(href, index, current) {
-  if (R2Navigator.rights?.enableSearch) {
-    if (IS_DEV) {
-      console.log("goToSearchIndex");
+  async goToSearchIndex(href, index, current) {
+    if (R2Navigator.rights?.enableSearch) {
+      if (IS_DEV) {
+        console.log("goToSearchIndex");
+      }
+      await SearchModuleInstance.goToSearchIndex(href, index, current);
     }
-    await SearchModuleInstance.goToSearchIndex(href, index, current);
   }
-}
-export async function goToSearchID(href, index, current) {
-  if (R2Navigator.rights?.enableSearch) {
-    if (IS_DEV) {
-      console.log("goToSearchID");
+  async goToSearchID(href, index, current) {
+    if (R2Navigator.rights?.enableSearch) {
+      if (IS_DEV) {
+        console.log("goToSearchID");
+      }
+      await SearchModuleInstance.goToSearchID(href, index, current);
     }
-    await SearchModuleInstance.goToSearchID(href, index, current);
   }
-}
-export async function clearSearch() {
-  if (R2Navigator.rights?.enableSearch) {
-    if (IS_DEV) {
-      console.log("clearSearch");
+  async clearSearch() {
+    if (R2Navigator.rights?.enableSearch) {
+      if (IS_DEV) {
+        console.log("clearSearch");
+      }
+      await SearchModuleInstance.clearSearch();
     }
-    await SearchModuleInstance.clearSearch();
   }
-}
 
-export function currentResource() {
-  if (IS_DEV) {
-    console.log("currentResource");
-  }
-  return R2Navigator.currentResource();
-}
-export function mostRecentNavigatedTocItem() {
-  if (IS_DEV) {
-    console.log("mostRecentNavigatedTocItem");
-  }
-  return R2Navigator.mostRecentNavigatedTocItem();
-}
-export function totalResources() {
-  if (IS_DEV) {
-    console.log("totalResources");
-  }
-  return R2Navigator.totalResources();
-}
-export function publicationLanguage() {
-  if (IS_DEV) {
-    console.log("publicationLanguage");
-  }
-  return R2Navigator.publication.metadata.language;
-}
-export async function resetUserSettings() {
-  if (IS_DEV) {
-    console.log("resetSettings");
-  }
-  R2Settings.resetUserSettings();
-}
-export async function applyUserSettings(userSettings) {
-  if (IS_DEV) {
-    console.log("applyUserSettings");
-  }
-  R2Settings.applyUserSettings(userSettings);
-}
-export async function currentSettings() {
-  if (IS_DEV) {
-    console.log("currentSettings");
-  }
-  return R2Settings.currentSettings();
-}
-export async function increase(incremental) {
-  if (
-    (incremental === "pitch" ||
-      incremental === "rate" ||
-      incremental === "volume") &&
-    R2Navigator.rights?.enableTTS
-  ) {
+  currentResource() {
     if (IS_DEV) {
-      console.log("increase " + incremental);
+      console.log("currentResource");
     }
-    R2TTSSettings.increase(incremental);
-  } else {
-    if (IS_DEV) {
-      console.log("increase " + incremental);
-    }
-    R2Settings.increase(incremental);
+    return R2Navigator.currentResource();
   }
-}
-export async function decrease(incremental) {
-  if (
-    (incremental === "pitch" ||
-      incremental === "rate" ||
-      incremental === "volume") &&
-    R2Navigator.rights?.enableTTS
-  ) {
+  mostRecentNavigatedTocItem() {
     if (IS_DEV) {
-      console.log("decrease " + incremental);
+      console.log("mostRecentNavigatedTocItem");
     }
-    R2TTSSettings.decrease(incremental);
-  } else {
+    return R2Navigator.mostRecentNavigatedTocItem();
+  }
+  totalResources() {
     if (IS_DEV) {
-      console.log("decrease " + incremental);
+      console.log("totalResources");
     }
-    R2Settings.decrease(incremental);
+    return R2Navigator.totalResources();
   }
-}
-export async function publisher(on) {
-  if (IS_DEV) {
-    console.log("publisher " + on);
+  publicationLanguage() {
+    if (IS_DEV) {
+      console.log("publicationLanguage");
+    }
+    return R2Navigator.publication.metadata.language;
   }
-  R2Settings.publisher(on);
-}
-export async function resetTTSSettings() {
-  if (R2Navigator.rights?.enableTTS) {
+  async resetUserSettings() {
     if (IS_DEV) {
       console.log("resetSettings");
     }
-    R2TTSSettings.resetTTSSettings();
+    R2Settings.resetUserSettings();
   }
-}
-export async function applyTTSSettings(ttsSettings) {
-  if (R2Navigator.rights?.enableTTS) {
+  async applyUserSettings(userSettings) {
     if (IS_DEV) {
-      console.log("applyTTSSettings");
+      console.log("applyUserSettings");
     }
-    R2TTSSettings.applyTTSSettings(ttsSettings);
+    R2Settings.applyUserSettings(userSettings);
   }
-}
-
-export async function applyTTSSetting(key, value) {
-  if (R2Navigator.rights?.enableTTS) {
+  async currentSettings() {
     if (IS_DEV) {
-      console.log("set " + key + " value " + value);
+      console.log("currentSettings");
     }
-    R2TTSSettings.applyTTSSetting(key, value);
+    return R2Settings.currentSettings();
   }
-}
-export async function applyPreferredVoice(value) {
-  if (R2Navigator.rights?.enableTTS) {
-    R2TTSSettings.applyPreferredVoice(value);
+  async increase(incremental) {
+    if (
+      (incremental === "pitch" ||
+        incremental === "rate" ||
+        incremental === "volume") &&
+      R2Navigator.rights?.enableTTS
+    ) {
+      if (IS_DEV) {
+        console.log("increase " + incremental);
+      }
+      R2TTSSettings.increase(incremental);
+    } else {
+      if (IS_DEV) {
+        console.log("increase " + incremental);
+      }
+      R2Settings.increase(incremental);
+    }
+  }
+  async decrease(incremental) {
+    if (
+      (incremental === "pitch" ||
+        incremental === "rate" ||
+        incremental === "volume") &&
+      R2Navigator.rights?.enableTTS
+    ) {
+      if (IS_DEV) {
+        console.log("decrease " + incremental);
+      }
+      R2TTSSettings.decrease(incremental);
+    } else {
+      if (IS_DEV) {
+        console.log("decrease " + incremental);
+      }
+      R2Settings.decrease(incremental);
+    }
+  }
+  async publisher(on) {
+    if (IS_DEV) {
+      console.log("publisher " + on);
+    }
+    R2Settings.publisher(on);
+  }
+  async resetTTSSettings() {
+    if (R2Navigator.rights?.enableTTS) {
+      if (IS_DEV) {
+        console.log("resetSettings");
+      }
+      R2TTSSettings.resetTTSSettings();
+    }
+  }
+  async applyTTSSettings(ttsSettings) {
+    if (R2Navigator.rights?.enableTTS) {
+      if (IS_DEV) {
+        console.log("applyTTSSettings");
+      }
+      R2TTSSettings.applyTTSSettings(ttsSettings);
+    }
+  }
+
+  async applyTTSSetting(key, value) {
+    if (R2Navigator.rights?.enableTTS) {
+      if (IS_DEV) {
+        console.log("set " + key + " value " + value);
+      }
+      R2TTSSettings.applyTTSSetting(key, value);
+    }
+  }
+  async applyPreferredVoice(value) {
+    if (R2Navigator.rights?.enableTTS) {
+      R2TTSSettings.applyPreferredVoice(value);
+    }
+  }
+
+  async goTo(locator) {
+    if (IS_DEV) {
+      console.log("goTo " + locator);
+    }
+    R2Navigator.goTo(locator);
+  }
+  async nextResource() {
+    if (IS_DEV) {
+      console.log("nextResource");
+    }
+    R2Navigator.nextResource();
+  }
+  async previousResource() {
+    if (IS_DEV) {
+      console.log("previousResource");
+    }
+    R2Navigator.previousResource();
+  }
+  async nextPage() {
+    if (IS_DEV) {
+      console.log("nextPage");
+    }
+    R2Navigator.nextPage();
+  }
+  async previousPage() {
+    if (IS_DEV) {
+      console.log("previousPage");
+    }
+    R2Navigator.previousPage();
+  }
+  async atStart() {
+    if (IS_DEV) {
+      console.log("atStart");
+    }
+    return R2Navigator.atStart();
+  }
+  async atEnd() {
+    if (IS_DEV) {
+      console.log("atEnd");
+    }
+    return R2Navigator.atEnd();
+  }
+  async scroll(value) {
+    if (IS_DEV) {
+      console.log("scroll " + value);
+    }
+    R2Settings.scroll(value);
+  }
+
+  async currentLocator() {
+    if (IS_DEV) {
+      console.log("currentLocator");
+    }
+    return R2Navigator.currentLocator();
+  }
+  async positions() {
+    if (IS_DEV) {
+      console.log("positions");
+    }
+    return R2Navigator.positions();
+  }
+  async goToPosition(value) {
+    if (IS_DEV) {
+      console.log("goToPosition");
+    }
+    return R2Navigator.goToPosition(value);
+  }
+  async applyAttributes(value) {
+    if (IS_DEV) {
+      console.log("applyAttributes");
+    }
+    R2Navigator.applyAttributes(value);
+  }
+  async snapToElement(value) {
+    if (IS_DEV) {
+      console.log("snapToElement");
+    }
+    R2Navigator.snapToElement(value);
   }
 }
 
-export async function goTo(locator) {
-  if (IS_DEV) {
-    console.log("goTo " + locator);
-  }
-  R2Navigator.goTo(locator);
-}
-export async function nextResource() {
-  if (IS_DEV) {
-    console.log("nextResource");
-  }
-  R2Navigator.nextResource();
-}
-export async function previousResource() {
-  if (IS_DEV) {
-    console.log("previousResource");
-  }
-  R2Navigator.previousResource();
-}
-export async function nextPage() {
-  if (IS_DEV) {
-    console.log("nextPage");
-  }
-  R2Navigator.nextPage();
-}
-export async function previousPage() {
-  if (IS_DEV) {
-    console.log("previousPage");
-  }
-  R2Navigator.previousPage();
-}
-export async function atStart() {
-  if (IS_DEV) {
-    console.log("atStart");
-  }
-  return R2Navigator.atStart();
-}
-export async function atEnd() {
-  if (IS_DEV) {
-    console.log("atEnd");
-  }
-  return R2Navigator.atEnd();
-}
-export async function scroll(value) {
-  if (IS_DEV) {
-    console.log("scroll " + value);
-  }
-  R2Settings.scroll(value);
-}
-
-export async function currentLocator() {
-  if (IS_DEV) {
-    console.log("currentLocator");
-  }
-  return R2Navigator.currentLocator();
-}
-export async function positions() {
-  if (IS_DEV) {
-    console.log("positions");
-  }
-  return R2Navigator.positions();
-}
-export async function goToPosition(value) {
-  if (IS_DEV) {
-    console.log("goToPosition");
-  }
-  return R2Navigator.goToPosition(value);
-}
-export async function applyAttributes(value) {
-  if (IS_DEV) {
-    console.log("applyAttributes");
-  }
-  R2Navigator.applyAttributes(value);
-}
-export async function snapToElement(value) {
-  if (IS_DEV) {
-    console.log("snapToElement");
-  }
-  R2Navigator.snapToElement(value);
-}
-
-export async function load(config: ReaderConfig): Promise<any> {
+export async function load(config: ReaderConfig): Promise<D2Reader> {
+  var d2Reader = new D2Reader();
   var browsers: string[] = [];
 
   if (config.protection?.enforceSupportedBrowsers) {
@@ -667,167 +670,9 @@ export async function load(config: ReaderConfig): Promise<any> {
       });
     }
 
-    return new Promise((resolve) => resolve(R2Navigator));
+    return new Promise((resolve) => resolve(d2Reader));
   } else {
     throw new Error("Browser not suppoorted");
   }
 }
 
-exports.load = async function (config: ReaderConfig) {
-  load(config);
-};
-exports.unload = async function () {
-  unload();
-};
-
-exports.resetUserSettings = function () {
-  resetUserSettings();
-};
-
-// - apply user setting(s)
-exports.applyUserSettings = function (userSettings) {
-  applyUserSettings(userSettings);
-};
-exports.currentSettings = function () {
-  return currentSettings();
-};
-exports.increase = function (incremental) {
-  increase(incremental);
-};
-exports.decrease = function (incremental) {
-  decrease(incremental);
-};
-exports.publisher = function (on) {
-  publisher(on);
-};
-
-exports.startReadAloud = function () {
-  startReadAloud();
-};
-exports.stopReadAloud = function () {
-  stopReadAloud();
-};
-exports.pauseReadAloud = function () {
-  pauseReadAloud();
-};
-exports.resumeReadAloud = function () {
-  resumeReadAloud();
-};
-
-exports.applyTTSSettings = function (ttsSettings) {
-  applyTTSSettings(ttsSettings);
-};
-exports.applyTTSSetting = function (key, value) {
-  applyTTSSetting(key, value);
-};
-exports.applyPreferredVoice = function (value) {
-  applyPreferredVoice(value);
-};
-exports.resetTTSSettings = function () {
-  resetTTSSettings();
-};
-
-// - add bookmark
-// - delete bookmark
-exports.saveBookmark = function () {
-  return saveBookmark();
-};
-exports.deleteBookmark = function (bookmark) {
-  return deleteBookmark(bookmark);
-};
-
-exports.deleteAnnotation = function (highlight) {
-  return deleteAnnotation(highlight);
-};
-
-exports.addAnnotation = function (highlight) {
-  return addAnnotation(highlight);
-};
-
-// - go to locator (this will be used for anything form toc, bookmark, last reading position etc.)
-exports.goTo = function (locator) {
-  goTo(locator);
-};
-
-// - next resource
-// - previous resource
-exports.nextResource = function () {
-  nextResource();
-};
-exports.previousResource = function () {
-  previousResource();
-};
-
-// - next page (only in paginated mode)
-// - previous page (only in paginated)
-exports.nextPage = function () {
-  nextPage();
-};
-exports.previousPage = function () {
-  previousPage();
-};
-
-exports.atStart = function () {
-  return atStart();
-};
-exports.atEnd = function () {
-  return atEnd();
-};
-
-exports.scroll = function (value) {
-  scroll(value);
-};
-
-exports.tableOfContents = function () {
-  return tableOfContents();
-};
-exports.readingOrder = function () {
-  return readingOrder();
-};
-
-exports.bookmarks = function () {
-  return bookmarks();
-};
-exports.annotations = function () {
-  return annotations();
-};
-
-exports.currentResource = function () {
-  return currentResource();
-};
-exports.mostRecentNavigatedTocItem = function () {
-  return mostRecentNavigatedTocItem();
-};
-exports.totalResources = function () {
-  return totalResources();
-};
-exports.publicationLanguage = function () {
-  return publicationLanguage();
-};
-exports.search = function (term, current) {
-  return search(term, current);
-};
-exports.goToSearchIndex = function (href, index, current) {
-  goToSearchIndex(href, index, current);
-};
-exports.goToSearchID = function (href, index, current) {
-  goToSearchID(href, index, current);
-};
-exports.clearSearch = function () {
-  clearSearch();
-};
-exports.currentLocator = function () {
-  return currentLocator();
-};
-exports.positions = function () {
-  return positions();
-};
-exports.goToPosition = function (value) {
-  goToPosition(value);
-};
-exports.applyAttributes = function (value) {
-  applyAttributes(value);
-};
-exports.snapToElement = function (value) {
-  snapToElement(value);
-};

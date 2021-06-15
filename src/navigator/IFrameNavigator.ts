@@ -49,7 +49,7 @@ import AnnotationModule, {
   AnnotationModuleConfig,
 } from "../modules/AnnotationModule";
 import TTSModule, { TTSModuleConfig } from "../modules/TTS/TTSModule";
-import { goTo, IS_DEV } from "..";
+import { IS_DEV } from "..";
 import Splitting from "../modules/TTS/splitting";
 import SearchModule, {
   SearchModuleConfig,
@@ -404,7 +404,7 @@ export default class IFrameNavigator implements Navigator {
     mainElement: HTMLElement,
     headerMenu: HTMLElement,
     footerMenu: HTMLElement
-  ): Promise<void> {
+  ): Promise<IFrameNavigator> {
     this.headerMenu = headerMenu;
     this.mainElement = mainElement;
     try {
@@ -771,7 +771,7 @@ export default class IFrameNavigator implements Navigator {
       // or we weren't able to insert the template in the element.
       console.error(err);
       this.abortOnError();
-      return new Promise<void>((_, reject) => reject(err)).catch(() => {});
+      return new Promise<any>((_, reject) => reject(err)).catch(() => {});
     }
   }
 
@@ -1176,7 +1176,7 @@ export default class IFrameNavigator implements Navigator {
     }
   }
 
-  private async loadManifest(): Promise<void> {
+  private async loadManifest(): Promise<IFrameNavigator> {
     try {
       const createSubmenu = (
         parentElement: Element,
@@ -1359,6 +1359,8 @@ export default class IFrameNavigator implements Navigator {
         startUrl = this.publication.getAbsoluteHref(startLink.href);
       }
 
+      let self = this;
+
       if (lastReadingPosition) {
         const linkHref = this.publication.getAbsoluteHref(
           lastReadingPosition.href
@@ -1366,7 +1368,9 @@ export default class IFrameNavigator implements Navigator {
         if (IS_DEV) console.log(lastReadingPosition.href);
         if (IS_DEV) console.log(linkHref);
         lastReadingPosition.href = linkHref;
-        this.navigate(lastReadingPosition);
+        this.navigate(lastReadingPosition).then(() => {
+          return new Promise<IFrameNavigator>((resolve) => resolve(self));
+        });
       } else if (startUrl) {
         const position: ReadingPosition = {
           href: startUrl,
@@ -1377,15 +1381,18 @@ export default class IFrameNavigator implements Navigator {
           title: startLink.title,
         };
 
-        this.navigate(position);
+        this.navigate(position).then(() => {
+          return new Promise<IFrameNavigator>((resolve) => resolve(self));
+        });
+      } else {
+        return new Promise<IFrameNavigator>((resolve) => resolve(self));
       }
-
-      return new Promise<void>((resolve) => resolve());
     } catch (err) {
       console.error(err);
       this.abortOnError();
-      return new Promise<void>((_, reject) => reject(err)).catch(() => {});
+      return new Promise<any>((_, reject) => reject(err)).catch(() => {});
     }
+    return new Promise<IFrameNavigator>((resolve) => resolve(this));
   }
 
   private async handleIFrameLoad(): Promise<void> {
@@ -2225,7 +2232,7 @@ export default class IFrameNavigator implements Navigator {
       let locator = this.publication.positions.filter(
         (el: Locator) => el.locations.position === parseInt(String(position))
       )[0];
-      goTo(locator);
+      this.goTo(locator);
     }
   }
   snapToElement(element: HTMLElement) {
@@ -2594,7 +2601,7 @@ export default class IFrameNavigator implements Navigator {
     }
   }
 
-  navigate(locator: Locator): void {
+  async navigate(locator: Locator): Promise<void> {
     const exists = this.publication.getTOCItem(locator.href);
     if (exists) {
       var isCurrentLoaded = false;
