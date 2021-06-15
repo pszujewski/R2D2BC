@@ -2192,7 +2192,8 @@ export default class IFrameNavigator implements Navigator {
         this.view.getCurrentPosition() * (positions.length - 1)
       );
       position = positions[positionIndex];
-    } else {
+    }
+    if (!position) {
       var tocItem = this.publication.getTOCItem(this.currentChapterLink.href);
       if (this.currentTocUrl !== null) {
         tocItem = this.publication.getTOCItem(this.currentTocUrl);
