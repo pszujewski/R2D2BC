@@ -328,7 +328,6 @@ export default class Publication {
             locator.locations.position - 1 - (positions.length - 1)
           );
         });
-        this.positions = positions;
       }
     });
 
@@ -348,6 +347,8 @@ export default class Publication {
     // we need to wait for all of them to complete, meaning everything has bee
     // fetched and counted
     await Promise.all(promises);
+
+    this.positions = positions;
   }
 
   /**
