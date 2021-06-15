@@ -321,6 +321,7 @@ export default class ReflowableBookView implements BookView {
     } else {
       // TODO: need to double check this, why sometimes we get "rightWidth 0.091064453125"
       const rightWidth = Math.floor(this.getRightColumnsWidth());
+      console.log("Right width", rightWidth);
       return rightWidth <= 0;
     }
   }
@@ -543,6 +544,7 @@ export default class ReflowableBookView implements BookView {
       .scrollWidth;
     const width = this.getColumnWidth();
     let rightWidth = scrollWidth - width;
+    console.log("initial rightWidth", rightWidth, scrollWidth, width);
     if (this.hasFixedScrollWidth) {
       // In some browsers (IE and Firefox with certain books),
       // scrollWidth doesn't change when some columns

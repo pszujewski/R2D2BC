@@ -2948,9 +2948,6 @@ export default class IFrameNavigator implements Navigator {
           return this.annotator.saveLastReadingPosition(position);
         });
       } else {
-        if (IS_DEV) {
-          console.log("save last reading position", position);
-        }
         return this.annotator.saveLastReadingPosition(position);
       }
     } else {
