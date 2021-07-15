@@ -2333,7 +2333,7 @@ export default class IFrameNavigator implements Navigator {
     return this.publication.readingOrder.length;
   }
   mostRecentNavigatedTocItem(): string {
-    return this.publication.getRelativeHref(this.currentTOCRawLink);
+    return this.currentTOCRawLink;
   }
   currentResource(): number {
     let currentLocation = this.currentChapterLink.href;
@@ -2411,7 +2411,7 @@ export default class IFrameNavigator implements Navigator {
       this.publication.positions
     ) {
       let positions = this.publication.positionsByHref(
-        this.publication.getRelativeHref(this.currentChapterLink.href)
+        this.currentChapterLink.href
       );
       let positionIndex = Math.ceil(
         this.view.getCurrentPosition() * (positions.length - 1)
@@ -3235,9 +3235,7 @@ export default class IFrameNavigator implements Navigator {
           this.publication.positions) ||
         this.publication.positions
       ) {
-        const positions = this.publication.positionsByHref(
-          this.publication.getRelativeHref(tocItem.Href)
-        );
+        const positions = this.publication.positionsByHref(tocItem.Href);
         const positionIndex = Math.ceil(
           locations.progression * (positions.length - 1)
         );
