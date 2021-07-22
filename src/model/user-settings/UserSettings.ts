@@ -1062,23 +1062,21 @@ export class UserSettings implements IUserSettings {
     await this.applyProperties();
     this.settingsChangeCallback();
 
-    setTimeout(async () => {
-      if (userSettings.verticalScroll !== undefined) {
-        const position = this.view.getCurrentPosition();
-        this.verticalScroll = UserSettings.parseScrollSetting(
-          userSettings.verticalScroll
-        );
-        this.userProperties.getByRef(ReadiumCSS.SCROLL_REF).value =
-          this.verticalScroll;
-        await this.saveProperty(
-          this.userProperties.getByRef(ReadiumCSS.SCROLL_REF)
-        );
-        await this.applyProperties();
-        this.view.setMode(this.verticalScroll);
-        this.view.goToPosition(position);
-        this.viewChangeCallback();
-      }
-    }, 10);
+    if (userSettings.verticalScroll !== undefined) {
+      const position = this.view.getCurrentPosition();
+      this.verticalScroll = UserSettings.parseScrollSetting(
+        userSettings.verticalScroll
+      );
+      this.userProperties.getByRef(ReadiumCSS.SCROLL_REF).value =
+        this.verticalScroll;
+      await this.saveProperty(
+        this.userProperties.getByRef(ReadiumCSS.SCROLL_REF)
+      );
+      await this.applyProperties();
+      this.view.setMode(this.verticalScroll);
+      this.view.goToPosition(position);
+      this.viewChangeCallback();
+    }
   }
 
   /**
