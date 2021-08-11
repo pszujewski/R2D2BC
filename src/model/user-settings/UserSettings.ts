@@ -176,6 +176,9 @@ export class UserSettings implements IUserSettings {
     await settings.initialise();
 
     if (config.initialUserSettings) {
+      if (!settings.userProperties) {
+        settings.userProperties = settings.getUserSettings();
+      }
       let initialUserSettings = config.initialUserSettings;
       if (initialUserSettings.verticalScroll !== undefined) {
         settings.verticalScroll = this.parseScrollSetting(
@@ -192,6 +195,8 @@ export class UserSettings implements IUserSettings {
         settings.appearance = UserSettings.appearanceValues.findIndex(
           (el: any) => el === initialUserSettings.appearance
         );
+        settings.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF).value =
+          settings.appearance;        
         await settings.saveProperty(
           settings.userProperties.getByRef(ReadiumCSS.APPEARANCE_REF)
         );
