@@ -1494,6 +1494,9 @@ export default class IFrameNavigator implements Navigator {
       }
       if (!this.currentChapterLink.title && tocItem !== null && tocItem.Title) {
         this.currentChapterLink.title = tocItem.Title;
+      } else if (!this.currentChapterLink.title) {
+        const linkTitle = this.publication.getTOCItemAbsolute(currentLocation)?.Title ?? "";
+        this.currentChapterLink.title = linkTitle;
       }
       if (
         !this.currentChapterLink.type &&
