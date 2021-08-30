@@ -82,6 +82,29 @@ export class Publication extends R2Publication {
   public getAbsoluteHref(href: string): string | null {
     return new URL(href, this.manifestUrl.href).href;
   }
+
+  public hasFragment(href: string): boolean {
+    return href.indexOf("#") !== -1;
+  }
+
+  public extractFragment(href: string) {
+    return href.slice(href.indexOf("#") + 1);
+  }
+
+  public addFragmentToLocator(locator: Locator): Locator {
+    const elementId: string = this.extractFragment(locator.href);
+    if (!locator.locations) {
+      locator.locations = { progression: 0 };
+    }
+    if (elementId !== null) {
+      locator.locations = {
+        ...locator.locations,
+        fragment: elementId,
+      };
+    }
+    return locator;
+  }
+
   public getRelativeHref(href: string): string | null {
     const manifest = this.manifestUrl.href.replace("/manifest.json", ""); //new URL(this.manifestUrl.href, this.manifestUrl.href).href;
     let h = href.replace(manifest, "");
